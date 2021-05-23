@@ -1,1 +1,1 @@
-# apps-maestro
+# Apps Maestro
