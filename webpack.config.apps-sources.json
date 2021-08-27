@@ -1,0 +1,22 @@
+[
+  {
+    "app": "login",
+    "external": "https://ufc-interfaces.github.io/built-frontends/github-pages/login-assets",
+    "local": "http://localhost:3021"
+  },
+  {
+    "app": "nav",
+    "external": "https://ufc-interfaces.github.io/built-frontends/github-pages/nav-assets",
+    "local": "http://localhost:3022"
+  },
+  {
+    "app": "petri_editor",
+    "external": "https://ufc-interfaces.github.io/built-frontends/github-pages/petri-editor-assets",
+    "local": "http://localhost:3023"
+  },
+  {
+    "app": "petri_actions",
+    "external": "https://ufc-interfaces.github.io/built-frontends/github-pages/petri-editor-assets",
+    "local": "http://localhost:3024"
+  }
+]

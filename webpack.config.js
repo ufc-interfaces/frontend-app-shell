@@ -1,8 +1,25 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin')
 const path = require('path')
+const appSources = require('./webpack.config.apps-sources')
+
+require('dotenv-defaults/config')
 
 const DEFAULT_PORT = 3020
+const deps = require('./package.json').dependencies
+
+const getMFRemotes = () => {
+  const localApps = process.env.LOCAL_APPS || ''
+  console.log('localApps: ', localApps)
+  return appSources.reduce((remotes, source) => {
+    const { app, external, local } = source
+    const url = localApps.split(',').includes(app) ? local : external
+    return {
+      ...remotes,
+      [app]: `${app}@${url}/remoteEntry.js`,
+    }
+  }, {})
+}
 
 module.exports = {
   entry: './src/index',
@@ -10,9 +27,10 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     port: process.env.WEBPACK_PORT || DEFAULT_PORT,
+    historyApiFallback: true,
   },
   output: {
-    publicPath: "auto",
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
@@ -31,10 +49,14 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'maestro',
-      remotes: {
-        login: 'login@http://localhost:3021/remoteEntry.js',
-        app2: 'app2@http://localhost:3002/remoteEntry.js',
+      name: 'runtime',
+      filename: 'remoteEntry.js',
+      remotes: getMFRemotes(),
+      exposes: {},
+      shared: {
+        ...deps,
+        react: { eager: true, singleton: true, requiredVersion: deps['react'].version },
+        'react-dom': { eager: true, singleton: true, requiredVersion: deps['react-dom'].version },
       },
     }),
     new HtmlWebpackPlugin({

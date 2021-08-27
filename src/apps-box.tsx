@@ -1,5 +1,5 @@
 import React from 'react'
-import wrapFederatedModule from './utils/wrapFederatedModule'
+import wrapReactFederatedModule from './utils/wrapReactFederatedModule'
 
 const defaultErrorHandler = (module: string) => (error: any) => {
   console.error(
@@ -10,14 +10,26 @@ const defaultErrorHandler = (module: string) => (error: any) => {
   return Promise.resolve({ default: () => null })
 }
 
-export const LoginApp = wrapFederatedModule(
+export const LoginApp = wrapReactFederatedModule(
   React.lazy(() => {
     return import('login/Login').catch(defaultErrorHandler('Login'))
   }),
 )
 
-export const ButtonApp = wrapFederatedModule(
+export const NavApp = wrapReactFederatedModule(
+  // @ts-ignore
   React.lazy(() => {
-    return import('app2/Button').catch(defaultErrorHandler('Button'))
+    return import('nav/Nav').catch(defaultErrorHandler('Nav'))
   }),
 )
+
+// @ts-ignore
+export const PetriEditorApp = (props: AppProps) => {
+  import('petri_editor/PetriEditor')
+    .then(({ default: LauncherFn }) => {
+      LauncherFn(props)
+    })
+    .catch(defaultErrorHandler('Nav'))
+
+  return null
+}
