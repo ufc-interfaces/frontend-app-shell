@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import wrapReactFederatedModule from './utils/wrapReactFederatedModule'
 
 const defaultErrorHandler = (module: string) => (error: any) => {
@@ -10,7 +10,7 @@ const defaultErrorHandler = (module: string) => (error: any) => {
   return Promise.resolve({ default: () => null })
 }
 
-export const LoginApp = wrapReactFederatedModule(
+export const LoginApp: LoginAppComponent = wrapReactFederatedModule(
   React.lazy(() => {
     return import('login/Login').catch(defaultErrorHandler('Login'))
   }),

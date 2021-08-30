@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { ComponentType } from 'react'
 import { LoginApp, NavApp, PetriEditorApp } from './apps-box'
 import {
   BrowserRouter as Router,
   Route,
   Switch,
+  Redirect,
 } from 'react-router-dom'
 import FunctionBasedApp from './utils/FunctionBasedApp'
+import { getCurrentSession, login } from './fake-services/auth'
+import { RouteProps } from 'react-router'
 
 const Home = () => {
   return (
@@ -15,25 +18,47 @@ const Home = () => {
   )
 }
 
+function PrivateRoute(props: RouteProps) {
+  const { render, ...rest } = props
+  const authed = !!getCurrentSession()
+
+  console.log('getCurrentSession()', getCurrentSession())
+
+  return (
+    <Route
+      {...rest}
+      render={(props) => authed ? render(props) : (
+        <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+      )}
+    />
+  )
+}
+
 const App: React.FC<{ rootNode: Element }> = ({ rootNode }) => (
   <Router>
     <div>
       <Switch>
         <Route exact path='/login'>
-          <LoginApp />
+          <LoginApp onSubmit={login} />
         </Route>
-        <Route exact path='/'>
-          <NavApp />
-          <Home />
-        </Route>
-        <Route exact path='/editor'>
-          <NavApp />
-          <FunctionBasedApp appLauncher={PetriEditorApp} rootNode={rootNode} />
-        </Route>
-        <Route exact path='/actions'>
-          <NavApp />
-          <FunctionBasedApp appLauncher={PetriEditorApp} rootNode={rootNode} />
-        </Route>
+        <PrivateRoute exact path='/' render={() => (
+          <>
+            <NavApp />
+            <Home />
+          </>
+        )} />
+        <PrivateRoute exact path='/editor' render={() => (
+          <>
+            <NavApp />
+            <FunctionBasedApp appLauncher={PetriEditorApp} rootNode={rootNode} />
+          </>
+        )} />
+        <PrivateRoute exact path='/actions' render={() => (
+          <>
+            <NavApp />
+            <FunctionBasedApp appLauncher={PetriEditorApp} rootNode={rootNode} />
+          </>
+        )} />
       </Switch>
     </div>
   </Router>

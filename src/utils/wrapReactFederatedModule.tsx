@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react'
+import React, { Component, ComponentProps, ReactNode } from 'react'
 
 const wrapComponent = (
-  Component: DefaultAppComponent,
+  WrappedComponent: ReactAppComponent | LoginAppComponent,
   loadFallback: ReactNode = 'Loading',
   errorFallback: ReactNode = null
 ) => {
   type State = { hasError: boolean }
 
-  return class WrappedFederatedModule extends React.Component<AppProps, State> {
+  return class WrappedFederatedModule extends Component<ComponentProps<typeof WrappedComponent> | any, State> {
     state = { hasError: false }
 
     static getDerivedStateFromError() {
@@ -21,7 +21,7 @@ const wrapComponent = (
 
       return (
         <React.Suspense fallback={loadFallback}>
-          <Component {...this.props} />
+          <WrappedComponent {...this.props} />
         </React.Suspense>
       )
     }

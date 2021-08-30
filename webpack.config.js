@@ -49,12 +49,11 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'runtime',
+      name: 'app_shell',
       filename: 'remoteEntry.js',
       remotes: getMFRemotes(),
       exposes: {},
       shared: {
-        ...deps,
         react: { eager: true, singleton: true, requiredVersion: deps['react'].version },
         'react-dom': { eager: true, singleton: true, requiredVersion: deps['react-dom'].version },
       },

@@ -1,5 +1,5 @@
 {
-  "name": "frontend-runtime",
+  "name": "frontend-app-shell",
   "version": "1.0.0",
   "main": "src/index.tsx",
   "repository": "https://github.com/ufc-interfaces/frontend-runtime.git",
