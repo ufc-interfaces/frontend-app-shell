@@ -1,3 +1,7 @@
+export const clearSession = () => {
+  localStorage.removeItem('user_session')
+}
+
 export const getCurrentSession = (): Session => {
   const json = localStorage.getItem('user_session')
 
@@ -11,7 +15,7 @@ export const getCurrentSession = (): Session => {
     const { expiresAt } = session
 
     if (Number(expiresAt) < new Date().getTime()) {
-      localStorage.removeItem('user_session')
+      clearSession()
       return null
     }
 

@@ -1,4 +1,4 @@
-import React, { ComponentType } from 'react'
+import React from 'react'
 import { LoginApp, NavApp, PetriEditorApp } from './apps-box'
 import {
   BrowserRouter as Router,
@@ -7,22 +7,12 @@ import {
   Redirect,
 } from 'react-router-dom'
 import FunctionBasedApp from './utils/FunctionBasedApp'
-import { getCurrentSession, login } from './fake-services/auth'
+import { clearSession, getCurrentSession, login } from './fake-services/auth'
 import { RouteProps } from 'react-router'
-
-const Home = () => {
-  return (
-    <div>
-      <div>Home page</div>
-    </div>
-  )
-}
 
 function PrivateRoute(props: RouteProps) {
   const { render, ...rest } = props
   const authed = !!getCurrentSession()
-
-  console.log('getCurrentSession()', getCurrentSession())
 
   return (
     <Route
@@ -41,19 +31,14 @@ const App: React.FC<{ rootNode: Element }> = ({ rootNode }) => (
         <Route exact path='/login'>
           <LoginApp onSubmit={login} />
         </Route>
-        <PrivateRoute exact path='/' render={() => (
-          <>
-            <NavApp />
-            <Home />
-          </>
-        )} />
+        <Route exact path='/logout' render={() => {
+          clearSession()
+          return <Redirect to='/login' />
+        }} />
+        <Route exact path='/'>
+          <Redirect to='/editor' />
+        </Route>
         <PrivateRoute exact path='/editor' render={() => (
-          <>
-            <NavApp />
-            <FunctionBasedApp appLauncher={PetriEditorApp} rootNode={rootNode} />
-          </>
-        )} />
-        <PrivateRoute exact path='/actions' render={() => (
           <>
             <NavApp />
             <FunctionBasedApp appLauncher={PetriEditorApp} rootNode={rootNode} />
