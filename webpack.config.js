@@ -1,9 +1,8 @@
+require('dotenv-defaults/config')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin')
 const path = require('path')
 const appSources = require('./webpack.config.apps-sources')
-
-require('dotenv-defaults/config')
 
 const DEFAULT_PORT = 3020
 const deps = require('./package.json').dependencies

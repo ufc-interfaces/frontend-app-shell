@@ -7,22 +7,8 @@ import {
   Redirect,
 } from 'react-router-dom'
 import FunctionBasedApp from './utils/FunctionBasedApp'
-import { clearSession, getCurrentSession, login } from './fake-services/auth'
-import { RouteProps } from 'react-router'
-
-function PrivateRoute(props: RouteProps) {
-  const { render, ...rest } = props
-  const authed = !!getCurrentSession()
-
-  return (
-    <Route
-      {...rest}
-      render={(props) => authed ? render(props) : (
-        <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-      )}
-    />
-  )
-}
+import { clearSession, login } from './fake-services/auth'
+import PrivateRoute from './PrivateRoute'
 
 const App: React.FC<{ rootNode: Element }> = ({ rootNode }) => (
   <Router>
